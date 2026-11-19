@@ -1,0 +1,46 @@
+{
+  "name": "limx-monochrome",
+  "version": "1.1.0",
+  "description": "LimX Monochrome lossless and Hi-Res provider add-on for BitChord",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "test:live": "tsx tests/liveIntegration.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acedreamer/bitchord-monochrome-addon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/acedreamer/bitchord-monochrome-addon/issues"
+  },
+  "homepage": "https://github.com/acedreamer/bitchord-monochrome-addon#readme",
+  "keywords": [
+    "bitchord",
+    "limx",
+    "monochrome",
+    "lossless",
+    "flac",
+    "audio",
+    "addon"
+  ],
+  "author": "LimX",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^9.0.0",
+    "fastify": "^4.26.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
