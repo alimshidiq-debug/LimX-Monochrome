@@ -58,7 +58,7 @@ async function resolveStream(id, quality) {
       if (td.manifestMimeType?.includes("dash+xml") || decoded.trim().startsWith("<MPD") || decoded.trim().startsWith("<?xml")) continue;
       const payload = JSON.parse(decoded);
       const streamUrl = payload?.urls?.[0];
-      if (!streamUrl || !/^https?:\\/\\//.test(streamUrl)) continue;
+      if (!streamUrl || !["http:", "https:"].includes(new URL(streamUrl).protocol)) continue;
       return { url: streamUrl, format: "flac", quality, mimeType: "audio/flac", manifest: "none", encrypted: false, sampleRate: Number(payload.sampleRate) || 44100, bitDepth: Number(payload.bitDepth) || 16, headers: { "User-Agent": UA } };
     } catch (_) { /* try next upstream */ }
   }
@@ -87,7 +87,7 @@ export default {
       if (!q) return json({ error: 'Query parameter "q" is required.' }, 400);
       try { return json(await search(q)); } catch (_) { return json({ tracks: [] }); }
     }
-    const match = url.pathname.match(/^\\/stream\\/([^/]+)$/);
+    const match = url.pathname.startsWith("/stream/") ? [url.pathname, url.pathname.slice("/stream/".length)] : null;
     if (match) {
       const id = decodeURIComponent(match[1]);
       const requested = url.searchParams.get("quality") || "LOSSLESS";
