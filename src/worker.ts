@@ -10,10 +10,10 @@ const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/
 const HEADERS = { "User-Agent": UA, "x-client": "BiniLossless/v3.4", "Origin": "https://monochrome.st", "Referer": "https://monochrome.st/" };
 const QUALITY = ["HI_RES_LOSSLESS", "LOSSLESS", "HIGH"];
 
-function json(data, status = 200) {
+function json(data: any, status: number = 200) {
   return new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json; charset=utf-8", "access-control-allow-origin": "*" } });
 }
-function track(item) {
+function track(item: any) {
   const artists = Array.isArray(item.artistNames) && item.artistNames.length ? item.artistNames.join(", ") : item.artist?.name || item.artists?.[0]?.name || "Unknown Artist";
   const d = Number(item.duration || 0);
   return {
@@ -28,20 +28,20 @@ function track(item) {
     isrc: item.isrc || null
   };
 }
-async function upstream(url, timeout = 5000) {
+async function upstream(url: string, timeout: number = 5000) {
   return fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(timeout) });
 }
-async function search(q) {
+async function search(q: string) {
   const url = "https://tracks.monochrome.st/search?q=" + encodeURIComponent(q);
   const r = await upstream(url);
   if (!r.ok) return { tracks: [] };
   const data = await r.json();
   let items = Array.isArray(data?.tracks) ? data.tracks : [];
   const top = Array.isArray(data?.topResults) ? data.topResults.find(x => x?.entityType === "track" || x?.trackId) : null;
-  if (top && !items.some(x => x.id === top.id)) items = [top, ...items];
+  if (top && !items.some((x: any) => x.id === top.id)) items = [top, ...items];
   return { tracks: items.slice(0, 15).map(track) };
 }
-async function resolveStream(id, quality) {
+async function resolveStream(id: string, quality: string) {
   if (id.length >= 15 && /^\\d+$/.test(id)) {
     return { url: "https://tracks.monochrome.st/track/" + id, format: "flac", quality, mimeType: "audio/flac", manifest: "none", encrypted: false, sampleRate: 44100, bitDepth: 16, headers: { "User-Agent": UA } };
   }
@@ -65,7 +65,7 @@ async function resolveStream(id, quality) {
   return null;
 }
 export default {
-  async fetch(request) {
+  async fetch(request: Request) {
     const url = new URL(request.url);
     if (request.method === "OPTIONS") return new Response(null, { headers: { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, OPTIONS", "access-control-allow-headers": "*" } });
     if (url.pathname === "/health") return json({ status: "ok", service: "LimX Monochrome" });
