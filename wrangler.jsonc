@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "limx-monochrome",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-11-25"
+}
