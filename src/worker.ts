@@ -37,7 +37,7 @@ async function search(q: string) {
   if (!r.ok) return { tracks: [] };
   const data = await r.json();
   let items = Array.isArray(data?.tracks) ? data.tracks : [];
-  const top = Array.isArray(data?.topResults) ? data.topResults.find(x => x?.entityType === "track" || x?.trackId) : null;
+  const top = Array.isArray(data?.topResults) ? data.topResults.find((x: any) => x?.entityType === "track" || x?.trackId) : null;
   if (top && !items.some((x: any) => x.id === top.id)) items = [top, ...items];
   return { tracks: items.slice(0, 15).map(track) };
 }
